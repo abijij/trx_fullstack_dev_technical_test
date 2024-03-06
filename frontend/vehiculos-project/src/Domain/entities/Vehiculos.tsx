@@ -3,7 +3,7 @@ export interface Vehiculo {
     id?: string;
     placa: string;
     numero_economico: string;
-    vin: string; 
+    vim: string; 
     asientos: number;
     seguro: string;
     seguro_numero: number;

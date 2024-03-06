@@ -16,7 +16,7 @@ export const VehiculoInitialState: Vehiculo = {
     id: '',
     placa: '',
     numero_economico:'',
-    vin: '', 
+    vim: '', 
     asientos: 0,
     seguro: '',
     seguro_numero: 0,
