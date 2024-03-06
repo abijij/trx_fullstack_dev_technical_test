@@ -322,8 +322,8 @@ Vehiculos.searchByBrand = (brand) => {
     });
 };
 
-Vehiculos.getAll = () => {
-    return new Promise((resolve, reject) => {
+Vehiculos.getAll = (result) => {
+
         const sql = `
             SELECT
                 V.id,
@@ -339,22 +339,24 @@ Vehiculos.getAll = () => {
                 V.color
             FROM 
                 vehiculos as V
+            ORDER BY 
+                V.id
         `;
-
         db.query(
             sql,
             (err, res) => {
                 if (err) {
-                    console.error('Error executing SQL query:', err);
-                    reject({ success: false, message: 'Error en la consulta SQL.' });
-                } else {
-                    console.log('Vehiculos obtenidos:', JSON.stringify(res, null, 3));
-                    resolve({ success: true, data: res });
+                    console.log('Error:', err);
+                    result(err, null);
+                }
+                else {
+                    console.log('Reporte(s) de cliente :', res);
+                    result(null, res);
                 }
             }
-        );
-    });
-};
+        )
+    
+}
 
 
 

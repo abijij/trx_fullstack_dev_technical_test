@@ -136,18 +136,18 @@ module.exports = {
     },
 
     getAll(req, res) {
-        Vehiculos.getAll()
-            .then((result) => {
-                if (result.data.length > 0) {
-                    res.status(200).json(result);
-                } else {
-                    res.status(404).json({ success: false, message: 'No se encontraron vehiculos.' });
-                }
-            })
-            .catch((error) => {
-                res.status(500).json(error);
+        Vehiculos.getAll((err, data)=>{
+        if (err) {
+            return res.status(501).json({
+                success: false,
+                message: 'Hubo un error al momento de listar de los vehiculos',
+                error: err
             });
-    },
+        }
+        return res.status(201).json(data);
+
+    });
+}
     
 
 }

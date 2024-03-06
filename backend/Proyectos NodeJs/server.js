@@ -110,13 +110,13 @@ vehiculosRoutes(app, upload);
     /**
      * Hace que el servidor escuche en el puerto 3000 de la dirección IP especificada (192.168.100.16 o localhost) e imprime un mensaje en la consola indicando que el servidor se ha iniciado correctamente.
      */
-    server.listen(3000, '192.168.100.110' || 'localhost', function() {
-        console.log('Aplicacion de NodeJS ' + port + ' Iniciada...')
-    });
-
-    // server.listen(port, '172.26.12.36', function () {
-    //     console.log('Listering port ' + port)
+    // server.listen(3000, '192.168.100.110' || 'localhost', function() {
+    //     console.log('Aplicacion de NodeJS ' + port + ' Iniciada...')
     // });
+
+    server.listen(port, '172.26.6.212', function () {
+        console.log('Listering port ' + port)
+    });
 
 
 // ERROR HANDLER

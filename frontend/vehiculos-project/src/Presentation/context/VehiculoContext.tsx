@@ -100,7 +100,7 @@ export const VehiculoProvider = ({children}: any) => {
 
     const getAllVehiculos = async (): Promise<void> => {
         const result = await GetAllVehiculosUseCase();
-        setvehiculos(result);
+        setvehiculos(Array.isArray(result) ? result : []);
     }
 
     const saveVehiculoSession = async(vehiculo: Vehiculo) => {

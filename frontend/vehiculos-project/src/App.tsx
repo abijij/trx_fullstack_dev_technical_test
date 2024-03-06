@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useContext, useEffect, useState } from 'react'
+import { VehiculoContext } from './Presentation/context/VehiculoContext'
+
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { getAllVehiculos,vehiculos} = useContext(VehiculoContext);
+  
+  useEffect(() => {
+    getAllVehiculos();
+    
+  }, [])
+  
+ 
+  console.log("Log para la tabla Vehiculos" + JSON.stringify(vehiculos, null, 3))
+  console.log(typeof vehiculos)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='App'>
+      <div className='table-responsive'>
+        <table className='table table-sm table-bordered'>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Placa</th>
+              <th>Vim</th>
+              <th>Asientos</th>
+              <th>Seguro</th>
+              <th>N#_Seguro</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Year</th>
+              <th>Color</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vehiculos.map((vehiculo) => (
+              <tr key={vehiculo.id}>
+                <td>{vehiculo.id}</td>
+                <td>{vehiculo.placa}</td>
+                <td>{vehiculo.vin}</td>
+                <td>{vehiculo.asientos}</td>
+                <td>{vehiculo.seguro}</td>
+                <td>{vehiculo.seguro_numero}</td>
+                <td>{vehiculo.brand}</td>
+                <td>{vehiculo.model}</td>
+                <td>{vehiculo.year}</td>
+                <td>{vehiculo.color}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
+
+
+
 
 export default App

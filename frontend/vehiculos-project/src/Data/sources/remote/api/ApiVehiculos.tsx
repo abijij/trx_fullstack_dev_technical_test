@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const ApiVehiculos = axios.create({
-    baseURL: 'http://192.168.100.110/api',
+    baseURL: 'http://18.190.64.227/api',
     headers: {
         'Content-type': 'application/json'
     }
