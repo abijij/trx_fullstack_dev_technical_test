@@ -8,9 +8,10 @@ import '../../style.css';
 import { GetVehiculosByBrandUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByBrand';
 import { GetVehiculoByModelUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByModel';
 import { GetVehiculoByYearUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByYear';
+import {Maps} from './Maps'
 
 export const ShowVehiculos = () => {
-  const { getAllVehiculos, vehiculos, create, update, remove, saveVehiculosSession} = useContext(VehiculoContext);
+  const { getAllVehiculos, vehiculos, create, update, remove, saveVehiculosSession } = useContext(VehiculoContext);
   const [title, setTitle] = useState('');
   const [operation, setOperation] = useState(1)
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,46 +20,47 @@ export const ShowVehiculos = () => {
   const [vehiculo, setVehiculo] = useState<Vehiculo[]>([]);
   const [searchText, setSearchText] = useState('');
   const [searchActive, setSearchActive] = useState(false);
-  
+  const [years, setYears] = useState<number[]>([]);
+
   const searchVehiculos = async (name: string) => {
     if (name.trim() === '') {
       getAllVehiculos();
     } else {
-    let result;
+      let result;
 
-    switch (searchType) {
-      case 'brand':
-        const brandResult = await GetVehiculosByBrandUseCase(name);
-        result = brandResult;
-        saveVehiculosSession(result);
-        break;
-      case 'model':
-        const modelResult = await GetVehiculoByModelUseCase(name);
-        result=modelResult;
-        saveVehiculosSession(result);
-        break;
-      case 'year':
-        const yearResult = await GetVehiculoByYearUseCase(parseInt(name));
-        result=yearResult;
-        saveVehiculosSession(result);
-        break;
-      default:
-        break;
+      switch (searchType) {
+        case 'brand':
+          const brandResult = await GetVehiculosByBrandUseCase(name);
+          result = brandResult;
+          saveVehiculosSession(result);
+          break;
+        case 'model':
+          const modelResult = await GetVehiculoByModelUseCase(name);
+          result = modelResult;
+          saveVehiculosSession(result);
+          break;
+        case 'year':
+          const yearResult = await GetVehiculoByYearUseCase(parseInt(name));
+          result = yearResult;
+          saveVehiculosSession(result);
+          break;
+        default:
+          break;
+      }
+      console.log('Contenido de vehiuculo:', vehiculos);
+      setVehiculo(result || []);
     }
-    console.log('Contenido de vehiuculo:', vehiculos);
-    setVehiculo(result || []); 
-  }
   };
 
   const handleSearchClick = () => {
-    
+
     setSearchActive(true);
   };
 
-  
+
 
   useEffect(() => {
-    
+
     if (searchActive) {
       searchVehiculos(searchText);
       setSearchActive(false);
@@ -78,6 +80,28 @@ export const ShowVehiculos = () => {
     year: 0,
     color: ''
   })
+  const marcasDeVehiculos = [
+    "Audi",
+    "BMW",
+    "Chevrolet",
+    "Fiat",
+    "Ford",
+    "Honda",
+    "Hyundai",
+    "Jaguar",
+    "Kia",
+    "Land Rover",
+    "Mazda",
+    "Mercedes-Benz",
+    "Nissan",
+    "Peugeot",
+    "Renault",
+    "Subaru",
+    "Tesla",
+    "Toyota",
+    "Volkswagen",
+    "Volvo"
+  ];
   const onChanget = (property: string, value: any) => {
     setValues({ ...values, [property]: value });
   }
@@ -86,6 +110,13 @@ export const ShowVehiculos = () => {
     getAllVehiculos();
 
   }, [])
+
+  useEffect(() => {
+    const currentYear = new Date().getFullYear();
+    const startingYear = 1960;
+    const yearsArray = Array.from({ length: currentYear - startingYear + 1 }, (_, index) => startingYear + index).reverse();
+    setYears(yearsArray);
+  }, []);
 
   const openModal = (op: number, id: string, placa: string, numero_economico: string, vim: string, asientos: number, seguro: string, seguro_numero: number, brand: string, model: string, year: number, color: string) => {
     setValues({
@@ -210,7 +241,7 @@ export const ShowVehiculos = () => {
     setCurrentPage(page);
   };
 
-  
+
 
   console.log("Log para la tabla boton" + JSON.stringify(vehiculos, null, 3))
 
@@ -221,6 +252,9 @@ export const ShowVehiculos = () => {
   return (
     <div className='App'>
       <div className='container-fluid'>
+      <div className='mt-3'>
+        <Maps />
+        </div>
         <div className='row mt-3'>
           <div className='col-md-6 offset-md-3'>
             <div className='d-flex justify-content-between align-items-center'>
@@ -325,7 +359,7 @@ export const ShowVehiculos = () => {
             <div className='modal-body'>
               <input type="hidden" id='id' ></input>
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-car'></i></span>
                 <input
                   type="text"
                   id='placa'
@@ -337,7 +371,7 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-dollar-sign'></i></span>
                 <input
                   type="text"
                   id='numero_economico'
@@ -349,7 +383,7 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-note-sticky'></i></span>
                 <input
                   type="text"
                   id='vim'
@@ -361,7 +395,7 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-chair'></i></span>
                 <input
                   type="number"
                   id='asientos'
@@ -373,7 +407,7 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-brands fa-digital-ocean'></i></span>
                 <input
                   type="text"
                   id='seguro'
@@ -385,7 +419,7 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-copyright'></i></span>
                 <input
                   type="number"
                   id='seguro_numero'
@@ -397,52 +431,79 @@ export const ShowVehiculos = () => {
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
-                <input
-                  type="text"
+                <span className='input-group-text'><i className='fa-solid fa-copyright'></i></span>
+                <select
                   id='brand'
-                  className='form-control'
-                  placeholder='Brand'
+                  className='form-select'
                   value={values.brand}
                   onChange={(e) => onChanget('brand', e.target.value)}
-                />
+                >
+                  <option value="">Selecciona una marca</option>
+                  {marcasDeVehiculos.map((marca, index) => (
+                    <option key={index} value={marca}>{marca}</option>
+                  ))}
+                </select>
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-car-side'></i></span>
                 <input
                   type="text"
                   id='model'
                   className='form-control'
-                  placeholder='Model'
+                  placeholder='Agrega el Modelo'
                   value={values.model}
                   onChange={(e) => onChanget('model', e.target.value)}
                 />
               </div>
 
               <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
-                <input
-                  type="number"
-                  id='year'
-                  className='form-control'
-                  placeholder='Year'
-                  value={values.year}
-                  onChange={(e) => onChanget('year', parseInt(e.target.value, 10))}
-                />
-              </div>
+                    <span className='input-group-text'><i className='fa-solid fa-calendar-days'></i></span>
+                    <select
+                      className="form-select"
+                      value={values.year}
+                      onChange={(e) => onChanget('year', parseInt(e.target.value, 10))}
+                    >
+                      <option value="">Selecciona un año</option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className='input-group mb-3'>
-                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
-                <input
-                  type="text"
-                  id='color'
-                  className='form-control'
-                  placeholder='Color'
-                  value={values.color}
-                  onChange={(e) => onChanget('color', e.target.value)}
-                />
-              </div>
+                  <div className='input-group mb-3'>
+                    <span className='input-group-text'><i className='fa-solid fa-droplet'></i></span>
+                    <select
+                      id='color'
+                      className='form-select'
+                      value={values.color}
+                      onChange={(e) => onChanget('color', e.target.value)}
+                    >
+                      <option value="">Selecciona un color</option>
+                      <option value="red">Rojo</option>
+                      <option value="blue">Azul</option>
+                      <option value="green">Verde</option>
+                      <option value="yellow">Amarillo</option>
+                      <option value="orange">Naranja</option>
+                      <option value="purple">Púrpura</option>
+                      <option value="pink">Rosado</option>
+                      <option value="brown">Marrón</option>
+                      <option value="black">Negro</option>
+                      <option value="white">Blanco</option>
+                      <option value="gray">Gris</option>
+                      <option value="cyan">Cian</option>
+                      <option value="magenta">Magenta</option>
+                      <option value="lime">Limón</option>
+                      <option value="olive">Oliva</option>
+                      <option value="teal">Verde Azulado</option>
+                      <option value="navy">Azul Marino</option>
+                      <option value="silver">Plata</option>
+                      <option value="gold">Oro</option>
+                      <option value="indigo">Índigo</option>
+                    </select>
+                  </div>
 
               <div className='d-grid col-6 mx-auto'>
                 <button onClick={() => validar()} className='btn btn-success'>
