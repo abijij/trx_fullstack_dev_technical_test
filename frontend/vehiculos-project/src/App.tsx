@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ShowVehiculos } from './Presentation/components/ShowVehiculos';
+import './style.css';
 
 
 

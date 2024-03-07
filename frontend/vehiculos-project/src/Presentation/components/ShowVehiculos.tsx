@@ -1,14 +1,69 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { show_alert } from '../../funtions';
 import { VehiculoContext } from '../context/VehiculoContext';
 import { Vehiculo } from '../../Domain/entities/Vehiculos';
+import '../../style.css';
+import { GetVehiculosByBrandUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByBrand';
+import { GetVehiculoByModelUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByModel';
+import { GetVehiculoByYearUseCase } from '../../Domain/useCases/Vehiculos/SearchVehiculoByYear';
 
 export const ShowVehiculos = () => {
-  const { getAllVehiculos, vehiculos, create, update, remove } = useContext(VehiculoContext);
+  const { getAllVehiculos, vehiculos, create, update, remove, saveVehiculosSession} = useContext(VehiculoContext);
   const [title, setTitle] = useState('');
   const [operation, setOperation] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
+  const vehiclesPerPage = 5;
+  const [searchType, setSearchType] = useState('Marca');
+  const [vehiculo, setVehiculo] = useState<Vehiculo[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [searchActive, setSearchActive] = useState(false);
+  
+  const searchVehiculos = async (name: string) => {
+    if (name.trim() === '') {
+      getAllVehiculos();
+    } else {
+    let result;
+
+    switch (searchType) {
+      case 'brand':
+        const brandResult = await GetVehiculosByBrandUseCase(name);
+        result = brandResult;
+        saveVehiculosSession(result);
+        break;
+      case 'model':
+        const modelResult = await GetVehiculoByModelUseCase(name);
+        result=modelResult;
+        saveVehiculosSession(result);
+        break;
+      case 'year':
+        const yearResult = await GetVehiculoByYearUseCase(parseInt(name));
+        result=yearResult;
+        saveVehiculosSession(result);
+        break;
+      default:
+        break;
+    }
+    console.log('Contenido de vehiuculo:', vehiculos);
+    setVehiculo(result || []); 
+  }
+  };
+
+  const handleSearchClick = () => {
+    
+    setSearchActive(true);
+  };
+
+  
+
+  useEffect(() => {
+    
+    if (searchActive) {
+      searchVehiculos(searchText);
+      setSearchActive(false);
+    }
+  }, [searchActive, searchText]);
 
   const [values, setValues] = useState({
     id: '',
@@ -105,7 +160,7 @@ export const ShowVehiculos = () => {
       show_alert('Ya existe un vehículo con la misma placa', 'error');
     } else {
       console.log('Formulario válido. Puedes realizar la acción correspondiente.');
-  
+
       try {
         if (operation === 1) {
           await create(values);
@@ -114,7 +169,7 @@ export const ShowVehiculos = () => {
         } else if (operation === 2) {
           // Verificar si se realizaron cambios
           const changesMade = Object.keys(values).some((key) => values[key as keyof typeof values] !== vehiculos.find((v) => v.id === values.id)![key as keyof typeof values]);
-  
+
           if (changesMade) {
             await update(values);
             getAllVehiculos();
@@ -151,25 +206,54 @@ export const ShowVehiculos = () => {
     });
   }
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  
 
   console.log("Log para la tabla boton" + JSON.stringify(vehiculos, null, 3))
+
+  const indexOfLastVehicle = currentPage * vehiclesPerPage;
+  const indexOfFirstVehicle = indexOfLastVehicle - vehiclesPerPage;
+  const currentVehicles = vehiculos.slice(indexOfFirstVehicle, indexOfLastVehicle);
 
   return (
     <div className='App'>
       <div className='container-fluid'>
         <div className='row mt-3'>
-          <div className='col-md-4 offset-md-4'>
-            <div className='d-grind mx-auto'>
+          <div className='col-md-6 offset-md-3'>
+            <div className='d-flex justify-content-between align-items-center'>
+              <div className='input-group me-2'>
+                <select
+                  className='form-select'
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                >
+                  <option value='brand'>Por Marca</option>
+                  <option value='model'>Por Modelo</option>
+                  <option value='year'>Por Año</option>
+                </select>
+                <input
+                  type='text'
+                  className='form-control'
+                  placeholder='Buscar...'
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+                <button className='btn btn-outline-secondary' type='button' onClick={handleSearchClick}>
+                  <i className='fa-solid fa-search'></i>
+                </button>
+              </div>
               <button onClick={() => openModal(1, '', '', '', '', 0, '', 0, '', '', 0, '')} className='btn btn-dark' data-bs-toggle='modal' data-bs-target='#modalVehiculos'>
-                <i className='fa-solid fa-circle-plus'></i>Añadir
+                <i className='fa-solid fa-circle-plus'></i> Añadir
               </button>
             </div>
           </div>
         </div>
         <div className='row mt-3'>
-          <div className='' col-12 col-lg-8 offset-0 offset-lg-2>
+          <div className=' '>
             <div className='table-responsive'>
-              <table className='table table-bordered'>
+              <table className='table table-bordered table-sm'>
                 <thead>
                   <tr>
                     <th>Id</th>
@@ -186,28 +270,28 @@ export const ShowVehiculos = () => {
                   </tr>
                 </thead>
                 <tbody className='table-group-divider'>
-                  {vehiculos.map((vehiculo) => (
+                  {currentVehicles.map((vehiculo) => (
                     <tr key={vehiculo.id}>
-                      <td>{vehiculo.id}</td>
-                      <td>{vehiculo.placa}</td>
-                      <td>{vehiculo.numero_economico}</td>
-                      <td>{vehiculo.vim}</td>
+                      <td className='table-cell'>{vehiculo.id}</td>
+                      <td className='table-cell'>{vehiculo.placa}</td>
+                      <td className='table-cell'>{vehiculo.numero_economico}</td>
+                      <td className='table-cell'>{vehiculo.vim}</td>
                       <td>{vehiculo.asientos}</td>
-                      <td>{vehiculo.seguro}</td>
-                      <td>{vehiculo.seguro_numero}</td>
-                      <td>{vehiculo.brand}</td>
+                      <td className='table-cell'>{vehiculo.seguro}</td>
+                      <td className='table-cell'>{vehiculo.seguro_numero}</td>
+                      <td className='table-cell'>{vehiculo.brand}</td>
                       <td>{vehiculo.model}</td>
-                      <td>{vehiculo.year}</td>
-                      <td>{vehiculo.color}</td>
-                      <td>
+                      <td className='table-cell'>{vehiculo.year}</td>
+                      <td className='table-cell'>{vehiculo.color}</td>
+                      <td className='table-cell'>
                         <button onClick={() => openModal(2, vehiculo.id || '', vehiculo.placa || '', vehiculo.numero_economico || '', vehiculo.vim || '', vehiculo.asientos || 0, vehiculo.seguro || '', vehiculo.seguro_numero || 0, vehiculo.brand || '', vehiculo.model || '', vehiculo.year || 0, vehiculo.color || '')} className='btn btn-warning' data-bs-toggle='modal' data-bs-target='#modalVehiculos'>
                           <i className='fa-solid fa-edit'></i>
                         </button>
                       </td>
-                      <td>
-                        <button 
-                        onClick={() => deleteVehiculo(vehiculo)}
-                        className='btn btn-danger'>
+                      <td className='table-cell'>
+                        <button
+                          onClick={() => deleteVehiculo(vehiculo)}
+                          className='btn btn-danger'>
                           <i className='fa-solid fa-trash'></i>
                         </button>
                       </td>
@@ -215,6 +299,18 @@ export const ShowVehiculos = () => {
                   ))}
                 </tbody>
               </table>
+              <nav>
+                <ul className="pagination">
+                  {Array.from({ length: Math.ceil(vehiculos.length / vehiclesPerPage) }, (_, index) => (
+                    <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                      <button className="page-link" onClick={() => handlePageChange(index + 1)}>
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
             </div>
           </div>
         </div>

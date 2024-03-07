@@ -89,50 +89,70 @@ module.exports = {
     searchByModel(req, res) {
         const model = req.params.model;
 
-        Vehiculos.searchByModel(model)
-            .then((result) => {
-                res.status(result.status).json(result);
-            })
-            .catch((error) => {
-                res.status(500).json({ status: 500, message: 'Error interno en el servidor.' });
-            });
+        Vehiculos.searchByModel(model, (err,data) =>{
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error al momento de listar los productos',
+                    error: err
+                });
+            }
+
+            return res.status(201).json(data);
+        })
+           
     },
   
     searchByColor(req, res) {
         const color = req.params.color;
 
-        Vehiculos.searchByColor(color)
-            .then((result) => {
-                res.status(result.status).json(result);
-            })
-            .catch((error) => {
-                res.status(500).json({ status: 500, message: 'Error interno en el servidor.' });
-            });
+        Vehiculos.searchByColor(color, (err,data) =>{
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error al momento de listar los productos',
+                    error: err
+                });
+            }
+
+            return res.status(201).json(data);
+        })
     },
+            
 
 
     searchByYear(req, res) {
         const year = req.params.year;
 
-        Vehiculos.searchByYear(year)
-            .then((result) => {
-                res.status(result.status).json(result);
-            })
-            .catch((error) => {
-                res.status(500).json({ status: 500, message: 'Error interno en el servidor.' });
-            });
+        Vehiculos.searchByYear(year, (err,data) => {
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error al momento de listar los productos',
+                    error: err
+                });
+            }
+
+            return res.status(201).json(data);
+        })
+           
     },
 
     searchByBrand(req, res) {
         const brand = req.params.brand;
 
-        Vehiculos.searchByBrand(brand)
-            .then((result) => {
-                res.status(result.status).json(result);
-            })
-            .catch((error) => {
-                res.status(500).json({ status: 500, message: 'Error interno en el servidor.' });
-            });
+        Vehiculos.searchByBrand(brand,(err,data) =>{
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error al momento de listar los productos',
+                    error: err
+                });
+            }
+
+            return res.status(201).json(data);
+
+        });
     },
 
     getAll(req, res) {

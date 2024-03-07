@@ -53,7 +53,7 @@ export class VehiculosRepositoryImpl implements VehiculoRepository{
     }
     async searchByModel(model: string): Promise<Vehiculo[]> {
         try {
-            const response = await ApiVehiculos.get<Vehiculo[]>(`/api/vehiculos/searchByModel/${model}`);
+            const response = await ApiVehiculos.get<Vehiculo[]>(`/vehiculos/searchByModel/${model}`);
             return Promise.resolve(response.data);
         } catch (error) {
             let e = (error as AxiosError);
@@ -63,7 +63,7 @@ export class VehiculosRepositoryImpl implements VehiculoRepository{
     }
     async searchByYear(year: number): Promise<Vehiculo[]> {
         try {
-            const response = await ApiVehiculos.get<Vehiculo[]>(`/api/vehiculos/searchByYear/${year}`);
+            const response = await ApiVehiculos.get<Vehiculo[]>(`/vehiculos/searchByYear/${year}`);
             return Promise.resolve(response.data);
         } catch (error) {
             let e = (error as AxiosError);
@@ -73,7 +73,7 @@ export class VehiculosRepositoryImpl implements VehiculoRepository{
     }
     async searchByBrand(brand: string): Promise<Vehiculo[]> {
         try {
-            const response = await ApiVehiculos.get<Vehiculo[]>(`/api/vehiculos/searchByBrand/${brand}`);
+            const response = await ApiVehiculos.get<Vehiculo[]>(`/vehiculos/searchByBrand/${brand}`);
             return Promise.resolve(response.data);
         } catch (error) {
             let e = (error as AxiosError);

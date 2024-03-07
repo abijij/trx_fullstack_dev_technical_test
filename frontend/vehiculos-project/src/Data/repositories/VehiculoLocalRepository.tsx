@@ -4,10 +4,10 @@ import { VehiculoLocalRepository } from "../../Domain/repositories/VehiculoLocal
 import { LocalStorage } from "../sources/local/LocalStorage";
 
 export class VehiculoLocalRepositoruImpl implements VehiculoLocalRepository{
-    async save(vehiculo: Vehiculo): Promise<void> {
-       const { save } = LocalStorage();
-       await save('user', JSON.stringify(vehiculo));
-    }
+    async save(vehiculos: Vehiculo[]): Promise<void> {
+        const { save } = LocalStorage();
+        await save('vehiculos', JSON.stringify(vehiculos));
+      }
    async getVehiculo(): Promise<Vehiculo> {
         const{getItem} = LocalStorage();
         const data = await getItem('vehiculo');

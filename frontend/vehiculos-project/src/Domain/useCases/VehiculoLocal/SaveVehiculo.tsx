@@ -2,6 +2,7 @@ import { VehiculoLocalRepositoruImpl } from "../../../Data/repositories/Vehiculo
 import { Vehiculo } from "../../entities/Vehiculos";
 
 const { save} = new VehiculoLocalRepositoruImpl();
-export const SaveVehiculoLocalUseCase = async(vehiculo: Vehiculo)=>{
-    return await save(vehiculo);
-}
+export const SaveVehiculosLocalUseCase = async (vehiculos: Vehiculo[]): Promise<Vehiculo[]> => {
+    await save(vehiculos);
+    return vehiculos;
+  };

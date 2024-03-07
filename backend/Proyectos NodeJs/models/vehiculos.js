@@ -162,8 +162,7 @@ Vehiculos.findById = (id, result) => {
     );
 }
 
-Vehiculos.searchByModel = (model) => {
-    return new Promise((resolve, reject) => {
+Vehiculos.searchByModel = (model,result) => {
         const sql = `
             SELECT
                 V.id,
@@ -189,21 +188,20 @@ Vehiculos.searchByModel = (model) => {
             [searchPattern],
             (err, res) => {
                 if (err) {
-                    console.error('Error executing SQL query:', err);
-                    reject({ status: 500, message: 'Error en la consulta SQL.' });
-                } else if (res.length === 0) {
-                    resolve({ status: 404, message: 'No se encontraron vehículos con ese modelo.' });
-                } else {
-                    console.log('Vehiculo(s) obtenido(s):', JSON.stringify(res, null, 3));
-                    resolve({ status: 200, data: res });
+                    
+                    console.log('Error:', err);
+                    result(err, null);
+                }
+                else {
+                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                    result(null, res);
                 }
             }
         );
-    });
 };
 
-Vehiculos.searchByColor = (color) => {
-    return new Promise((resolve, reject) => {
+Vehiculos.searchByColor = (color,result) => {
         const sql = `
             SELECT
                 V.id,
@@ -229,21 +227,21 @@ Vehiculos.searchByColor = (color) => {
             [searchPattern],
             (err, res) => {
                 if (err) {
-                    console.error('Error executing SQL query:', err);
-                    reject({ status: 500, message: 'Error en la consulta SQL.' });
-                } else if (res.length === 0) {
-                    resolve({ status: 404, message: 'No se encontraron vehículos con ese modelo.' });
-                } else {
-                    console.log('Vehiculo(s) obtenido(s):', JSON.stringify(res, null, 3));
-                    resolve({ status: 200, data: res });
+                    
+                    console.log('Error:', err);
+                    result(err, null);
+                }
+                else {
+                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                    result(null, res);
                 }
             }
         );
-    });
 };
 
-Vehiculos.searchByYear = (year) => {
-    return new Promise((resolve, reject) => {
+Vehiculos.searchByYear = (year,result) => {
+    
         const sql = `
             SELECT
                 V.id,
@@ -269,21 +267,22 @@ Vehiculos.searchByYear = (year) => {
             [searchPattern],
             (err, res) => {
                 if (err) {
-                    console.error('Error executing SQL query:', err);
-                    reject({ status: 500, message: 'Error en la consulta SQL.' });
-                } else if (res.length === 0) {
-                    resolve({ status: 404, message: 'No se encontraron vehículos con ese modelo.' });
-                } else {
-                    console.log('Vehiculo(s) obtenido(s):', JSON.stringify(res, null, 3));
-                    resolve({ status: 200, data: res });
+                    
+                    console.log('Error:', err);
+                    result(err, null);
+                }
+                else {
+                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                    result(null, res);
                 }
             }
         );
-    });
+    
 };
 
-Vehiculos.searchByBrand = (brand) => {
-    return new Promise((resolve, reject) => {
+Vehiculos.searchByBrand = (brand,result) => {
+    
         const sql = `
             SELECT
                 V.id,
@@ -309,17 +308,18 @@ Vehiculos.searchByBrand = (brand) => {
             [searchPattern],
             (err, res) => {
                 if (err) {
-                    console.error('Error executing SQL query:', err);
-                    reject({ status: 500, message: 'Error en la consulta SQL.' });
-                } else if (res.length === 0) {
-                    resolve({ status: 404, message: 'No se encontraron vehículos con ese modelo.' });
-                } else {
-                    console.log('Vehiculo(s) obtenido(s):', JSON.stringify(res, null, 3));
-                    resolve({ status: 200, data: res });
+                    
+                    console.log('Error:', err);
+                    result(err, null);
+                }
+                else {
+                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                    result(null, res);
                 }
             }
         );
-    });
+    
 };
 
 Vehiculos.getAll = (result) => {
@@ -350,7 +350,7 @@ Vehiculos.getAll = (result) => {
                     result(err, null);
                 }
                 else {
-                    console.log('Reporte(s) de cliente :', res);
+                    console.log('Vehiculo(s) encontrado(s) :', res);
                     result(null, res);
                 }
             }

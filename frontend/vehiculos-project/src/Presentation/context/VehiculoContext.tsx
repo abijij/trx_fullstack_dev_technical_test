@@ -8,7 +8,7 @@ import { DeleteVehiculoUseCase } from '../../Domain/useCases/Vehiculos/DeleteVeh
 import { GetVehiculoLocalUseCase } from '../../Domain/useCases/VehiculoLocal/GetVehiculoLocal';
 import { RemoveVehiculoLocalUseCase } from '../../Domain/useCases/VehiculoLocal/RemoveVehiculoLocal';
 import { GetAllVehiculosUseCase } from '../../Domain/useCases/Vehiculos/GetAllVehiculo';
-import { SaveVehiculoLocalUseCase } from '../../Domain/useCases/VehiculoLocal/SaveVehiculo';
+import { SaveVehiculosLocalUseCase } from '../../Domain/useCases/VehiculoLocal/SaveVehiculo';
 
 
 export const VehiculoInitialState: Vehiculo = {
@@ -35,7 +35,7 @@ export interface VehiculosContextProps{
 
     getVehiculoSession: () => Promise<void>;
 
-    saveVehiculoSession: (vehiculo: Vehiculo) => Promise<void>;
+    saveVehiculosSession: (vehiculo: Vehiculo[]) => Promise<void>;
 
     removeVehiculoSession: () => Promise<void>;
     
@@ -47,7 +47,7 @@ export interface VehiculosContextProps{
 
     remove(vehiculo: Vehiculo): Promise<ResponseApiVehiculos>,
 
-    getAllVehiculos(): Promise<void>,
+    getAllVehiculos(): Promise<Vehiculo[]>;
 
 }
 
@@ -98,15 +98,16 @@ export const VehiculoProvider = ({children}: any) => {
         setvehiculo(VehiculoInitialState);
     }
 
-    const getAllVehiculos = async (): Promise<void> => {
+    const getAllVehiculos = async (): Promise<Vehiculo[]> => {
         const result = await GetAllVehiculosUseCase();
         setvehiculos(Array.isArray(result) ? result : []);
+        return result;
     }
 
-    const saveVehiculoSession = async(vehiculo: Vehiculo) => {
-        await SaveVehiculoLocalUseCase(vehiculo);
-        setvehiculo(vehiculo);
-    }
+    const saveVehiculosSession = async (vehiculos: Vehiculo[]) => {
+        const result= await SaveVehiculosLocalUseCase(vehiculos);
+        setvehiculos(result);
+      };
 
     return(
         <VehiculoContext.Provider value={{
@@ -119,7 +120,7 @@ export const VehiculoProvider = ({children}: any) => {
             getVehiculoSession,
             removeVehiculoSession,
             update,
-            saveVehiculoSession
+            saveVehiculosSession
         }}>
 
             {children}
