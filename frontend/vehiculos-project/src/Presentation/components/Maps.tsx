@@ -3,6 +3,7 @@ import { GoogleMap, useLoadScript, Marker, DirectionsService, DirectionsRenderer
 import { UpdateVehiculoLocUseCase } from '../../Domain/useCases/Vehiculos/UpdateVehiculoLoc';
 import { show_alert } from '../../funtions';
 import { VehiculoContext } from "../context/VehiculoContext";
+import socket from '../../utils/SocketIo';
 
 export const Maps: React.FC = () => {
     const { vehiculos, getAllVehiculos, getVehiculoById, vehiculo } = useContext(VehiculoContext);
@@ -18,13 +19,12 @@ export const Maps: React.FC = () => {
     const [showMessage, setShowMessage] = useState(false);
     const [detailLoc, setdetailLoc] = useState("");
     const [routingEnabled, setRoutingEnabled] = useState(false);
-    console.log(activeMarker)
     
-
-
+    
 
     useEffect(() => {
         getAllVehiculos()
+        activeMarker
 
     }, [])
 
@@ -65,8 +65,7 @@ export const Maps: React.FC = () => {
     
             setdetailLoc(addressDetails);
     
-            console.log("Ubicación seleccionada:", clickedLocation);
-            console.log("Detalles de la ubicación:", addressDetails);
+            
         }
     };;
 
@@ -134,11 +133,11 @@ export const Maps: React.FC = () => {
           } else {
             try {
               await getVehiculoById(searchText2);
-              console.log("Log para ver si trae datos vehiculo" + JSON.stringify(vehiculo))
+              
     
               if (Array.isArray(vehiculo) && vehiculo.length > 0) {
                 const firstVehiculo = vehiculo[0];
-                console.log(vehiculo)
+                
                 setVehicleLocation({
                   lat: parseFloat(firstVehiculo.lat),
                   lng: parseFloat(firstVehiculo.lng),
@@ -147,7 +146,7 @@ export const Maps: React.FC = () => {
                 // Activar el enrutamiento
                 setRoutingEnabled(true);
     
-                console.log("Id que se va a rastrear " + vehicleLocation)
+                
                 show_alert('Vehículo va a ser rastreado.', 'success');
                 console.log(vehicleLocation);
               } else {
@@ -162,15 +161,49 @@ export const Maps: React.FC = () => {
         return true;
       }
 
-    useEffect(() => {
-
-        console.log("Nuevo valor de vehicleLocation:", vehicleLocation);
-    }, [vehicleLocation]);
+   
 
 
     const handleAddButtonClick2 = () => {
         validar2();
     }
+
+    useEffect(() => {
+      const firstVehiculo = vehiculo[0];
+  
+      // Establecer la ubicación del vehículo al cargar el componente
+      setVehicleLocation({
+        lat: parseFloat(firstVehiculo.lat),
+        lng: parseFloat(firstVehiculo.lng)
+      });
+  
+      // Conectar el socket y emitir la posición del vehículo
+      socket.connect();
+      socket.on("connect", () => {
+        console.log("<----------------SOCKET IO CONNECTION---------------->");
+      });
+      socket.emit("position", {
+        id: firstVehiculo.id,
+        lat: firstVehiculo.lat,
+        lng: firstVehiculo.lng,
+        ubicacion: firstVehiculo.ubicacion
+      });
+  
+      // Enviar la posición del vehículo cada 10 segundos
+      const intervalId = setInterval(() => {
+        socket.emit("position", {
+          id: firstVehiculo.id,
+          lat: firstVehiculo.lat,
+          lng: firstVehiculo.lng,
+          ubicacion: firstVehiculo.ubicacion  
+        });
+      }, 10000);
+  
+      // Limpiar el intervalo cuando el componente se desmonta
+      return () => clearInterval(intervalId);
+    }, [vehiculo]);
+
+
     return (
         <Fragment>
       <div className="container">
