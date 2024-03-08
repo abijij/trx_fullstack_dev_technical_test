@@ -18,9 +18,12 @@ Vehiculos.create = (vehiculos, result) => {
             brand,
             model,
             year,
-            color
+            color,
+            lat,
+            lng,
+            ubicacion
         )
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             
     `;
     db.query(
@@ -35,7 +38,10 @@ Vehiculos.create = (vehiculos, result) => {
             vehiculos.brand,
             vehiculos.model,
             vehiculos.year,
-            vehiculos.color
+            vehiculos.color,
+            vehiculos.lat,
+            vehiculos.lng,
+            vehiculos.ubicacion
         ],
         (err, res) => {
             if (err) {
@@ -66,7 +72,10 @@ Vehiculos.update = (vehiculos, result) => {
         brand = ? ,
         model = ? ,
         year = ? ,
-        color = ? 
+        color = ?,
+        lat = ?,
+        lng = ?,
+        ubicacion =?
     WHERE
         id = ? 
             
@@ -84,6 +93,9 @@ Vehiculos.update = (vehiculos, result) => {
             vehiculos.model,
             vehiculos.year,
             vehiculos.color,
+            vehiculos.lat,
+            vehiculos.lng,
+            vehiculos.ubicacion,
             vehiculos.id
         ],
         (err, res) => {
@@ -139,7 +151,10 @@ Vehiculos.findById = (id, result) => {
             V.brand,
             V.model,
             V.year,
-            V.color
+            V.color,
+            V.lat,
+            V.lng,
+            V.ubicacion 
         FROM 
             vehiculos as V
         WHERE
@@ -162,8 +177,8 @@ Vehiculos.findById = (id, result) => {
     );
 }
 
-Vehiculos.searchByModel = (model,result) => {
-        const sql = `
+Vehiculos.searchByModel = (model, result) => {
+    const sql = `
             SELECT
                 V.id,
                 V.placa,
@@ -175,34 +190,37 @@ Vehiculos.searchByModel = (model,result) => {
                 V.brand,
                 V.model,
                 V.year,
-                V.color
+                V.color,
+                V.lat,
+                V.lng,
+                V.ubicacion 
             FROM 
                 vehiculos as V
             WHERE
                 V.model LIKE ?
         `;
-        const searchPattern = `%${model}%`;
+    const searchPattern = `%${model}%`;
 
-        db.query(
-            sql,
-            [searchPattern],
-            (err, res) => {
-                if (err) {
-                    
-                    console.log('Error:', err);
-                    result(err, null);
-                }
-                else {
-                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
-                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
-                    result(null, res);
-                }
+    db.query(
+        sql,
+        [searchPattern],
+        (err, res) => {
+            if (err) {
+
+                console.log('Error:', err);
+                result(err, null);
             }
-        );
+            else {
+                // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                result(null, res);
+            }
+        }
+    );
 };
 
-Vehiculos.searchByColor = (color,result) => {
-        const sql = `
+Vehiculos.searchByColor = (color, result) => {
+    const sql = `
             SELECT
                 V.id,
                 V.placa,
@@ -214,35 +232,38 @@ Vehiculos.searchByColor = (color,result) => {
                 V.brand,
                 V.model,
                 V.year,
-                V.color
+                V.color,
+                V.lat,
+                V.lng,
+                V.ubicacion 
             FROM 
                 vehiculos as V
             WHERE
                 V.color LIKE ?
         `;
-        const searchPattern = `%${color}%`;
+    const searchPattern = `%${color}%`;
 
-        db.query(
-            sql,
-            [searchPattern],
-            (err, res) => {
-                if (err) {
-                    
-                    console.log('Error:', err);
-                    result(err, null);
-                }
-                else {
-                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
-                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
-                    result(null, res);
-                }
+    db.query(
+        sql,
+        [searchPattern],
+        (err, res) => {
+            if (err) {
+
+                console.log('Error:', err);
+                result(err, null);
             }
-        );
+            else {
+                // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                result(null, res);
+            }
+        }
+    );
 };
 
-Vehiculos.searchByYear = (year,result) => {
-    
-        const sql = `
+Vehiculos.searchByYear = (year, result) => {
+
+    const sql = `
             SELECT
                 V.id,
                 V.placa,
@@ -254,36 +275,39 @@ Vehiculos.searchByYear = (year,result) => {
                 V.brand,
                 V.model,
                 V.year,
-                V.color
+                V.color,
+                V.lat,
+                V.lng,
+                V.ubicacion 
             FROM 
                 vehiculos as V
             WHERE
                 V.year LIKE ?
         `;
-        const searchPattern = `%${year}%`;
+    const searchPattern = `%${year}%`;
 
-        db.query(
-            sql,
-            [searchPattern],
-            (err, res) => {
-                if (err) {
-                    
-                    console.log('Error:', err);
-                    result(err, null);
-                }
-                else {
-                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
-                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
-                    result(null, res);
-                }
+    db.query(
+        sql,
+        [searchPattern],
+        (err, res) => {
+            if (err) {
+
+                console.log('Error:', err);
+                result(err, null);
             }
-        );
-    
+            else {
+                // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                result(null, res);
+            }
+        }
+    );
+
 };
 
-Vehiculos.searchByBrand = (brand,result) => {
-    
-        const sql = `
+Vehiculos.searchByBrand = (brand, result) => {
+
+    const sql = `
             SELECT
                 V.id,
                 V.placa,
@@ -295,36 +319,39 @@ Vehiculos.searchByBrand = (brand,result) => {
                 V.brand,
                 V.model,
                 V.year,
-                V.color
+                V.color,
+                V.lat,
+                V.lng,
+                V.ubicacion 
             FROM 
                 vehiculos as V
             WHERE
                 V.brand LIKE ?
         `;
-        const searchPattern = `%${brand}%`;
+    const searchPattern = `%${brand}%`;
 
-        db.query(
-            sql,
-            [searchPattern],
-            (err, res) => {
-                if (err) {
-                    
-                    console.log('Error:', err);
-                    result(err, null);
-                }
-                else {
-                    // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
-                    console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
-                    result(null, res);
-                }
+    db.query(
+        sql,
+        [searchPattern],
+        (err, res) => {
+            if (err) {
+
+                console.log('Error:', err);
+                result(err, null);
             }
-        );
-    
+            else {
+                // Si la consulta se ejecuta correctamente, invoca la función de devolución de llamada con `null` como primer argumento y el ID del nuevo usuario como segundo argumento.
+                console.log('Vehiculo(s) obtenido(s):' + JSON.stringify(res, null, 3));
+                result(null, res);
+            }
+        }
+    );
+
 };
 
 Vehiculos.getAll = (result) => {
 
-        const sql = `
+    const sql = `
             SELECT
                 V.id,
                 V.placa,
@@ -336,28 +363,62 @@ Vehiculos.getAll = (result) => {
                 V.brand,
                 V.model,
                 V.year,
-                V.color
+                V.color,
+                V.lat,
+                V.lng,
+                V.ubicacion 
             FROM 
                 vehiculos as V
             ORDER BY 
                 V.id
         `;
-        db.query(
-            sql,
-            (err, res) => {
-                if (err) {
-                    console.log('Error:', err);
-                    result(err, null);
-                }
-                else {
-                    console.log('Vehiculo(s) encontrado(s) :', res);
-                    result(null, res);
-                }
+    db.query(
+        sql,
+        (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+                result(err, null);
             }
-        )
-    
+            else {
+                console.log('Vehiculo(s) encontrado(s) :', res);
+                result(null, res);
+            }
+        }
+    )
+
 }
 
-
+Vehiculos.updateLoc = (id, lat, lng, ubicacion, result) => {
+    const sql = `
+        UPDATE
+            vehiculos
+        SET
+            lat = ?,
+            lng = ?,
+            ubicacion = ?
+            
+        WHERE
+            id = ? 
+        `;
+    db.query(
+        sql,
+        [
+            lat,
+            lng,
+            ubicacion,
+            id
+        ],
+        (err, res) => {
+            if (err) {
+                console.log('Error:', err);
+                result(err, null);
+            }
+            else {
+                console.log('Se agrego la localizacion del Vehiculo :', res);
+                result(null, res);
+            }
+        }
+    )
+}
 
 module.exports = Vehiculos;

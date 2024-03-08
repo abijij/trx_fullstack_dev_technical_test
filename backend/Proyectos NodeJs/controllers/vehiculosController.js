@@ -167,7 +167,31 @@ module.exports = {
         return res.status(201).json(data);
 
     });
+},
+
+    updateLoc(req, res){
+        const id = req.body.id;
+        const lat = req.body.lat;
+        const lng = req.body.lng;
+        const ubicacion = req.body.ubicacion;
+
+        Vehiculos.updateLoc(id, lat, lng, ubicacion, (err,data) => {
+
+            if (err) {
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con la actualizacio  del vehiculo',
+                    error: err
+                });
+            }
+            return res.status(201).json({
+                success: true,
+                message: 'El Vehiculo se actualizo correctamente',
+                data: id
+            });
+        });
+    }
 }
     
 
-}
+

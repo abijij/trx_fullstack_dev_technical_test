@@ -10,6 +10,9 @@ export interface Vehiculo {
     brand: string;
     model: string;
     year: number;
-    color: string
+    color: string;
+    lat: string;
+    lng: string;
+    ubicacion: string
 
 }

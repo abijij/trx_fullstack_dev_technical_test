@@ -15,7 +15,7 @@ module.exports = {
      * Indica si el código está en modo producción o no.
      * @type {boolean}
      */
-    production: false,
+    production: true,
     /**
      * El ID del desarrollador que está trabajando en el código.
      * @type {number}
