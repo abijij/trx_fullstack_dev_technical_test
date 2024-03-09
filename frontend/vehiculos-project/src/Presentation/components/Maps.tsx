@@ -8,7 +8,7 @@ import socket from '../../utils/SocketIo';
 export const Maps: React.FC = () => {
     const { vehiculos, getAllVehiculos, getVehiculoById, vehiculo } = useContext(VehiculoContext);
     const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: 'AIzaSyAa_PpoUJCj42y6oZkgzk5jLnqFwMFKhWQ',
+        googleMapsApiKey: 'AIzaSyD7_L0yzJhE9DUwl2DXPhhtqiL03bPxRVE',
     });
     const [activeMarker, setActiveMarker] = useState<google.maps.LatLngLiteral | null>(null);
     const [vehicleLocation, setVehicleLocation] = useState<google.maps.LatLngLiteral | null>(null);
