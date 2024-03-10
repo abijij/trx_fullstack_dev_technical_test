@@ -20,6 +20,8 @@ module.exports = (app, upload) => {
 
     app.get('/api/vehiculos/getAll', vehiculosController.getAll);
 
+    app.put('/api/vehiculos/updateLoc', vehiculosController.updateLoc)
+
     
 
 }

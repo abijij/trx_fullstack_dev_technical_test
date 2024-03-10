@@ -1,0 +1,28 @@
+/* Estilo oscuro para el mapa */
+.DarkMapStyle {
+    filter: invert(100%) hue-rotate(180deg);
+  }
+  
+  /* Ajustar los estilos del contenedor del mapa */
+  .container {
+    height: 50vh;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Asegurarse de que el mapa ocupe el 100% del contenedor */
+  .gm-style {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  /* Asegurarse de que todos los elementos dentro del mapa tengan el 100% de ancho */
+  .gm-style > div {
+    width: 100% !important;
+  }
+  
+  /* Asegurarse de que el contenido del mapa tenga un fondo oscuro */
+  .gm-style > div > div > div > div > div {
+    background-color: #111 !important;
+  }
+  

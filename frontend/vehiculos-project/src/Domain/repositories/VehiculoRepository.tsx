@@ -18,4 +18,6 @@ export interface VehiculoRepository{
     searchByBrand(brand: string): Promise<Vehiculo[]>;
 
     getAll(): Promise <Vehiculo[]>;
-}
+
+    updateLoc(id: string, lat: string, lng: string, ubicacion: string): Promise<ResponseApiVehiculos>;
+}   
